@@ -3,26 +3,33 @@
 #' Information on each of the plots in this experiment.
 #'
 #' @format A data frame with 21 observations and 8 variables:
-#' \code{plot}: the plot id
-#' \code{block}: the whole plot for randomization of harvest year
-#' \code{subplot}: the subplot for randomization of treatment
+#' \code{field}: the field id
+#' \code{block}: the block id
+#' \code{whole_plot}: the wholeplot for randomization of harvest year
 #' \code{area_acre}: plot area in acres
 #' \code{manure}: "yes" if manure was previously used on the plot and "no" otherwise
+#' \code{x}: approximate field x coordinate for plotting
+#' \code{y}: approximate field y coordinate for plotting
 #' \code{trt}: the shorthand randomized (except for the non-manure plots) treatment
 #' \code{treatment}: the long treatment name
 #'
-#' @details This is a split-plot design where the whole plots (blocks) were
-#' randomly assigned an initial year of harvest. This was used as the whole plot
-#' because we believe in the future half of the prairie will be harvested in on
-#' year and the remainder the following year. Thus, the impact of this harvest
-#' timing is not of interest.
+#' @details This experiment is a blocked split-plot design, i.e. within each
+#' block there is a split-plot. Each block has 6 fields which are plot into 2
+#' whole plots for randomization of initial harvest year. Within each whole plot
+#' there are 3 fields which are randomly assigned one of three treatments (FB,
+#' LoDiv, and HiDiv).
 #'
-#' A treatment was randomly assigned within a subplot so that each of the 3
-#' treatments (FB, LoDiv, and HiDiv) are represented in each subplot. The only
-#' place randomization was not done was on the non-manure plots where each plot
-#' here had the HiDiv treatment. This was done to increase power in assessing
-#' the effect of manure on one of two prairie treatments (LoDiv, HiDiv). The
-#' argument for HiDiv vs LoDiv is that if we find the manure has negligible
-#' effect on the HiDiv then it is likely that manure will have a negligible
-#' effect on the LoDiv as well.
-"plots"
+#' This design was chosen because initial harvest year is not of scientific
+#' interest as future use of prairie as a energy/fuel source will need a steady
+#' flow of harvested prairie and therefore there will always be an alternating
+#' pattern in field harvest which is initiated by a one-year separation in
+#' initial harvest year.
+#'
+#' The use of manure was not randomized and thus these three fields are
+#' considered an augment of the design. The impact of manure on the FB treatment
+#' is not of interest, but it is of interest on LoDiv and HiDiv. To increase
+#' power, we decided to compare a single treatment with and without manure.
+#' We decided to use HiDiv since if there is negligible effect of manure on
+#' HiDiv, then we might reasonably infer negligible effect of manure on LoDiv
+#' while the converse does not seem to be immediate.
+"fields"
