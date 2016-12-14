@@ -95,5 +95,5 @@ ggplot(fields, aes(x=x, y=y, label=trt)) +
   geom_text() +
   theme_bw() +
   xlim(c(0,11)) +
-  ylim(c(0,14))
+  ylim(c(0,15))
 ```
