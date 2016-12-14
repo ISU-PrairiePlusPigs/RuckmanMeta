@@ -1,0 +1,12 @@
+Package: RuckmanMeta
+Title: Contains meta data for the Ruckman experiment
+Version: 0.1
+Authors@R: person("Jarad", "Niemi", email = "niemi@iastate.edu", role = c("aut", "cre"))
+Description: Provides data as well as a standard terminology for a prairie
+    study at the Ruckman Farm.
+Depends:
+    R (>= 3.3.1)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
