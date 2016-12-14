@@ -1,0 +1,99 @@
+---
+title: "Randomization"
+author: "Jarad Niemi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteIndexEntry{Randomization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+Here is the actual code used to perform the randomization. 
+
+To recreate the process, we use only the columns available in the original
+csv file. 
+
+```{r}
+fields <- RuckmanMeta::fields %>%
+  select(field,block,whole_plot,area_acre,manure,x,y)
+```
+
+##
+
+The design of the experiment is a split-plot design within blocks augmented
+with a non-randomized study. 
+
+## Randomization
+
+The randomization has two steps:
+
+1. Randomly assign harvest year to the whole plot
+2. Randomly assign treatments to the fields within the whole plot
+
+```{r}
+#################################################
+### Randomization
+#################################################
+set.seed(38) # For reproducibility
+
+fields <- fields %>%
+
+  # Randomize initial harvest
+  group_by(block) %>%
+  mutate(harvest = as.integer(ifelse(whole_plot == sample(whole_plot,1), 2019, 2020)),
+         whole_plot = paste0(block, ifelse(harvest==2019, "a", "b"))) %>% # Rename whole_plot to coincide with harvest year
+
+  # Randomize treatment
+  group_by(block,whole_plot,manure) %>%
+  mutate(trt = sample(c("FB","LoDiv","HiDiv")),
+         trt = ifelse(manure=="no", "HiDiv", trt)) %>% # non-randomization augmentation
+  ungroup()
+```
+
+We had two criteria to satisfy for a successful randomization:
+
+- Fields 13a and 13b must have exactly one FB treatment between the two of them
+- Mean and SD of field sizes in each treatment are approximately the same
+
+```{r}
+# Check to ensure fields 13a and 13b have exactly one FB treatment
+fields %>%
+  filter(field %in% c("13a","13b"))
+
+# Check field sizes for each treatment-manure combination to ensure the
+# mean and sd are approximately the same
+fields %>%
+  group_by(trt,manure) %>%
+  summarize(n = n(),
+            mean = mean(area_acre),
+            sd   = sd(area_acre)) %>%
+  arrange(manure, trt)
+```
+
+An iterative process was undertaken, updating the `set.seed` value until these
+criteria were satisfied. 
+The final randomization was 
+
+```{r}
+fields %>% as.data.frame
+```
+
+```{r}
+ggplot(fields, aes(x=x, y=y, label=harvest)) +
+  geom_text() +
+  theme_bw() +
+  xlim(c(0,11)) +
+  ylim(c(0,14))
+
+ggplot(fields, aes(x=x, y=y, label=trt)) +
+  geom_text() +
+  theme_bw() +
+  xlim(c(0,11)) +
+  ylim(c(0,14))
+```
